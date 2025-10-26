@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Users</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<h1>Manage Users</h1>
+
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<h2>Add New User</h2>
+<form th:action="@{/admin/users}" th:object="${newUser}" method="post">
+    <label>Username: <input type="text" th:field="*{username}" required></label><br>
+    <label>Password: <input type="password" th:field="*{passwordHash}" required></label><br>
+    <label>Role:
+        <select th:field="*{role}">
+            <option value="CUSTOMER">Customer</option>
+            <option value="AGENT">Agent</option>
+        </select>
+    </label><br>
+    <button type="submit">Add User</button>
+</form>
+
+<h2>User List</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Active</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.role}"></td>
+        <td th:text="${user.isActive} ? 'Yes' : 'No'"></td>
+        <td>
+            <a th:href="@{/admin/users/{id}(id=${user.id})}">Edit</a>
+            <form th:action="@{/admin/users/{id}(id=${user.id})}" method="delete" style="display:inline;">
+                <button type="submit" onclick="return confirm('Remove user?')">Remove</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

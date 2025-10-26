@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Car Availability</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<h1>Manage Car Availability</h1>
+
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<h2>Set Availability</h2>
+<form th:action="@{/admin/availability}" th:object="${newAvailability}" method="post">
+    <label>Car ID: <input type="number" th:field="*{carId}" required></label><br>
+    <label>Start Date: <input type="datetime-local" th:field="*{startDate}" required></label><br>
+    <label>End Date: <input type="datetime-local" th:field="*{endDate}" required></label><br>
+    <label>Available: <input type="checkbox" th:field="*{available}"></label><br>
+    <button type="submit">Set Availability</button>
+</form>
+
+<h2>Available Cars</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Car ID</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Available</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="avail : ${availabilities}">
+        <td th:text="${avail.id}"></td>
+        <td th:text="${avail.carId}"></td>
+        <td th:text="${avail.startDate}"></td>
+        <td th:text="${avail.endDate}"></td>
+        <td th:text="${avail.available} ? 'Yes' : 'No'"></td>
+        <td>
+            <a th:href="@{/admin/availability/{id}(id=${avail.id})}">Edit</a>
+            <form th:action="@{/admin/availability/{id}(id=${avail.id})}" method="delete" style="display:inline;">
+                <button type="submit" onclick="return confirm('Remove slot?')">Remove</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

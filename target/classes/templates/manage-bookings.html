@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Bookings</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<h1>Manage Bookings</h1>
+
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<h2>Create New Booking</h2>
+<form th:action="@{/admin/bookings}" th:object="${newBooking}" method="post">
+    <label>Car ID: <input type="number" th:field="*{carId}" required></label><br>
+    <label>Customer ID: <input type="number" th:field="*{customerId}" required></label><br>
+    <label>Start Date: <input type="datetime-local" th:field="*{startDate}" required></label><br>
+    <label>End Date: <input type="datetime-local" th:field="*{endDate}" required></label><br>
+    <button type="submit">Book</button>
+</form>
+
+<h2>Booking List</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Car ID</th>
+        <th>Customer ID</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="booking : ${bookings}">
+        <td th:text="${booking.id}"></td>
+        <td th:text="${booking.carId}"></td>
+        <td th:text="${booking.customerId}"></td>
+        <td th:text="${booking.startDate}"></td>
+        <td th:text="${booking.endDate}"></td>
+        <td th:text="${booking.status}"></td>
+        <td>
+            <a th:href="@{/admin/bookings/{id}(id=${booking.id})}">Edit Dates</a>
+            <form th:action="@{/admin/bookings/{id}(id=${booking.id})}" method="delete" style="display:inline;">
+                <button type="submit" onclick="return confirm('Cancel booking?')">Cancel</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

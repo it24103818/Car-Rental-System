@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage Cars</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+<h1>Manage Cars</h1>
+
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<h2>Add New Car</h2>
+<form th:action="@{/admin/cars}" th:object="${newCar}" method="post">
+  <label>Model: <input type="text" th:field="*{model}" required></label><br>
+  <label>Year: <input type="number" th:field="*{year}" required></label><br>
+  <label>License Plate: <input type="text" th:field="*{licensePlate}" required></label><br>
+  <label>Available: <input type="checkbox" th:field="*{available}"></label><br>
+  <button type="submit">Add Car</button>
+</form>
+
+<h2>Car List</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Model</th>
+    <th>Year</th>
+    <th>License Plate</th>
+    <th>Available</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="car : ${cars}">
+    <td th:text="${car.id}"></td>
+    <td th:text="${car.model}"></td>
+    <td th:text="${car.year}"></td>
+    <td th:text="${car.licensePlate}"></td>
+    <td th:text="${car.available} ? 'Yes' : 'No'"></td>
+    <td>
+      <a th:href="@{/admin/cars/{id}(id=${car.id})}">Edit</a>
+      <form th:action="@{/admin/cars/{id}(id=${car.id})}" method="delete" style="display:inline;">
+        <button type="submit" onclick="return confirm('Remove car?')">Remove</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

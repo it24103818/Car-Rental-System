@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Incident Reports</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+<h1>Incident Reports</h1>
+
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<h2>Log New Incident</h2>
+<form th:action="@{/admin/incidents}" th:object="${newIncident}" method="post">
+  <label>Car ID: <input type="number" th:field="*{carId}" required></label><br>
+  <label>Customer ID: <input type="number" th:field="*{customerId}" required></label><br>
+  <label>Date: <input type="datetime-local" th:field="*{incidentDate}" required></label><br>
+  <label>Description: <textarea th:field="*{description}" required></textarea></label><br>
+  <label>Follow-up: <textarea th:field="*{followUp}"></textarea></label><br>
+  <button type="submit">Log Incident</button>
+</form>
+
+<h2>View Reports</h2>
+<form method="get" th:action="@{/admin/incidents/search}">
+  <label>Search by Car ID: <input type="number" name="carId"></label>
+  <label>or Customer ID: <input type="number" name="customerId"></label>
+  <button type="submit">Search</button>
+</form>
+<table th:if="${reports}">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Car ID</th>
+    <th>Customer ID</th>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Follow-up</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="report : ${reports}">
+    <td th:text="${report.id}"></td>
+    <td th:text="${report.carId}"></td>
+    <td th:text="${report.customerId}"></td>
+    <td th:text="${report.incidentDate}"></td>
+    <td th:text="${report.description}"></td>
+    <td th:text="${report.followUp}"></td>
+    <td>
+      <a th:href="@{/admin/incidents/{id}(id=${report.id})}">Edit</a>
+      <form th:action="@{/admin/incidents/{id}(id=${report.id})}" method="delete" style="display:inline;">
+        <button type="submit" onclick="return confirm('Remove report?')">Remove</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
